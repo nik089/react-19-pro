@@ -1,0 +1,17 @@
+.user { padding: 30px; }
+
+table {
+  width: 100%;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+}
+
+th, td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.active { color: green; font-weight: bold; }
+.inactive { color: red; font-weight: bold; }

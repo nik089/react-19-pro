@@ -1,9 +1,13 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Landing from "./pages/Landing/Landing";
-import Login from "./pages/Login/Login";
-import Dashboard from "./pages/Dashboard/Dashboard";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import MainLayout from "./components/layout/MainLayout";
-import "./App.css";
+
+import Dashboard from "./pages/Dashboard/Dashboard";
+import Users from "./pages/User-Management/Users-List/Users";
+import AddUser from "./pages/User-Management/Add-User/addUser";
+import Roles from "./pages/User-Management/Roles/Role";
+import Settings from "./pages/Settings/Setting";
+import Login from "./pages/Login/Login";
+import Landing from "./pages/Landing/Landing";
 
 function App() {
   return (
@@ -11,14 +15,16 @@ function App() {
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
-        <Route
-          path="/dashboard"
-          element={
-            <MainLayout>
-              <Dashboard />
-            </MainLayout>
-          }
-        />
+
+        <Route element={<MainLayout />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/users" element={<Users />} />
+          <Route path="/add-user" element={<AddUser />} />
+          <Route path="/roles" element={<Roles />} />
+          <Route path="/settings" element={<Settings />} />
+        </Route>
+
+        <Route path="*" element={<Navigate to="/dashboard" />} />
       </Routes>
     </BrowserRouter>
   );
