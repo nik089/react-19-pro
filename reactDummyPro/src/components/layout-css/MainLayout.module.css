@@ -1,28 +1,46 @@
 .layout {
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  background: transparent;
 }
 
 .body {
   flex: 1;
   display: flex;
-  overflow: hidden;
-}
-
-.sidebar {
-  width: 240px;
-  background: #1e293b;
-  color: white;
-  padding: 20px;
-  flex-shrink: 0;
-  overflow: hidden;
+  gap: 18px;
+  padding: 18px 22px 22px;
 }
 
 .main {
   flex: 1;
-  padding: 25px;
-  background: #f8fafc;
+  padding: 28px;
+  background: var(--panel);
+  border-radius: 18px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
   overflow-y: auto;
+}
+
+@media (max-width: 900px) {
+  .body {
+    flex-direction: column;
+    padding: 14px 16px 18px;
+  }
+
+  .main {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 600px) {
+  .body {
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .main {
+    padding: 16px;
+    border-radius: 14px;
+  }
 }

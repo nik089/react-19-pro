@@ -1,20 +1,39 @@
 .header {
-  height: 70px;
-  padding: 0 40px;
+  height: 72px;
+  padding: 0 32px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #4f46e5;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  background: linear-gradient(120deg, #1d4ed8, #4338ca 55%, #0f172a);
+  color: #f8fafc;
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: 5;
 }
 
-button {
+.header h2 {
+  font-size: 20px;
+  letter-spacing: 0.4px;
+}
+
+.header button {
   padding: 8px 16px;
   border-radius: 8px;
   border: none;
-  background: #667eea;
+  background: rgba(255, 255, 255, 0.18);
   color: white;
   cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.header button:hover {
+  background: rgba(255, 255, 255, 0.28);
+  transform: translateY(-1px);
+}
+
+.header button:active {
+  transform: translateY(0);
 }
 
 /* Profile */
@@ -26,13 +45,19 @@ button {
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, #38bdf8, #22c55e);
   color: white;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: bold;
   cursor: pointer;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.3);
+  transition: transform 0.2s ease;
+}
+
+.avatar:hover {
+  transform: scale(1.04);
 }
 
 .dropdown {
@@ -43,6 +68,7 @@ button {
   box-shadow: 0 10px 25px rgba(0,0,0,0.1);
   border-radius: 12px;
   overflow: hidden;
+  border: 1px solid var(--border);
 }
 
 .dropdown button {
@@ -54,4 +80,25 @@ button {
 
 .dropdown button:hover {
   background: #f5f5f5;
+}
+
+@media (max-width: 900px) {
+  .header {
+    padding: 0 20px;
+  }
+}
+
+@media (max-width: 600px) {
+  .header {
+    height: 62px;
+    padding: 0 16px;
+  }
+
+  .header h2 {
+    font-size: 16px;
+  }
+
+  .header button {
+    padding: 6px 12px;
+  }
 }
