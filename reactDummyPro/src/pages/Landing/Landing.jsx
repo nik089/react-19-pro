@@ -1,7 +1,16 @@
 import Header from "../../components/layout/Header";
 import styles from "./Landing.module.css";
+import { useMemo, useRef, useState } from "react";
 
 function Landing() {
+  const [messages, setMessages] = useState([
+    { role: "assistant", content: "Hi! Ask me anything about this platform." }
+  ]);
+  const [input, setInput] = useState("");
+  const [isSending, setIsSending] = useState(false);
+  const [isStreaming, setIsStreaming] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const listRef = useRef(null);
 
   const features = [
     {
@@ -66,6 +75,220 @@ function Landing() {
     { number: "24/7", label: "Support" },
     { number: "50+", label: "Countries" }
   ];
+
+  const hfApiKey = useMemo(() => import.meta.env.VITE_HF_API_KEY || "", []);
+  const hfModel = useMemo(
+    () => import.meta.env.VITE_HF_MODEL || "mistralai/Mistral-7B-Instruct-v0.2",
+    []
+  );
+  const chatProvider = useMemo(() => import.meta.env.VITE_CHAT_PROVIDER || "ollama", []);
+  const ollamaModel = useMemo(
+    () => import.meta.env.VITE_OLLAMA_MODEL || "llama3.1:8b",
+    []
+  );
+  const ollamaUrl = useMemo(
+    () => import.meta.env.VITE_OLLAMA_URL || "/ollama/api/chat",
+    []
+  );
+
+  const buildPrompt = (thread) => {
+    const system = "System: You are a concise, helpful assistant for a user management platform. Keep answers under 6 sentences and avoid sensitive data.";
+    const history = thread
+      .slice(-6)
+      .map((m) => `${m.role === "user" ? "User" : "Assistant"}: ${m.content}`)
+      .join("\n");
+    return `${system}\n${history}\nAssistant:`;
+  };
+
+  const streamAssistantMessage = (fullText) => {
+    const id = Date.now();
+    setMessages((prev) => [...prev, { id, role: "assistant", content: "" }]);
+    setIsStreaming(true);
+
+    let index = 0;
+    const interval = setInterval(() => {
+      index += 3;
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.id === id ? { ...msg, content: fullText.slice(0, index) } : msg
+        )
+      );
+
+      if (listRef.current) {
+        listRef.current.scrollTop = listRef.current.scrollHeight;
+      }
+
+      if (index >= fullText.length) {
+        clearInterval(interval);
+        setIsStreaming(false);
+      }
+    }, 25);
+  };
+
+  const upsertAssistantMessage = (text) => {
+    setMessages((prev) => {
+      const last = prev[prev.length - 1];
+      if (last && last.role === "assistant" && !last.content) {
+        return [...prev.slice(0, -1), { ...last, content: text }];
+      }
+      return [...prev, { role: "assistant", content: text }];
+    });
+  };
+
+  const streamFromOllama = async (thread) => {
+    const id = Date.now();
+    setMessages((prev) => [...prev, { id, role: "assistant", content: "" }]);
+    setIsStreaming(true);
+    let received = false;
+
+    try {
+      const makeRequest = async (url) =>
+        fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            model: ollamaModel,
+            messages: thread.slice(-8).map((m) => ({
+              role: m.role,
+              content: m.content
+            })),
+            stream: true
+          })
+        });
+
+      let response = await makeRequest(ollamaUrl);
+      if (response.status === 404 && ollamaUrl.startsWith("/ollama")) {
+        response = await makeRequest("http://localhost:11434/api/chat");
+      }
+
+      if (!response.ok || !response.body) {
+        const errorText = await response.text();
+        throw new Error(
+          `Ollama error: ${response.status} ${response.statusText} ${errorText}`.trim()
+        );
+      }
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder("utf-8");
+      let buffer = "";
+      let done = false;
+
+      while (!done) {
+        const result = await reader.read();
+        done = result.done;
+        buffer += decoder.decode(result.value || new Uint8Array(), { stream: !done });
+
+        const lines = buffer.split("\n");
+        buffer = lines.pop() || "";
+
+        for (const line of lines) {
+          if (!line.trim()) continue;
+          try {
+            const chunk = JSON.parse(line);
+            const content = chunk?.message?.content || "";
+            if (content) {
+              received = true;
+              setMessages((prev) =>
+                prev.map((msg) =>
+                  msg.id === id ? { ...msg, content: msg.content + content } : msg
+                )
+              );
+              if (listRef.current) {
+                listRef.current.scrollTop = listRef.current.scrollHeight;
+              }
+            }
+            if (chunk?.done) {
+              done = true;
+            }
+          } catch {
+            // ignore malformed lines
+          }
+        }
+      }
+    } catch (err) {
+      const message =
+        err instanceof Error && err.message
+          ? err.message
+          : "Local chatbot not reachable. Ensure Ollama is running and CORS is enabled.";
+      upsertAssistantMessage(message);
+      return;
+    } finally {
+      setIsStreaming(false);
+      if (!received) {
+        upsertAssistantMessage(
+          "Local chatbot not reachable. Ensure Ollama is running and CORS is enabled."
+        );
+      }
+    }
+  };
+
+  const sendMessage = async (e) => {
+    e.preventDefault();
+    const trimmed = input.trim();
+    if (!trimmed || isSending || isStreaming) return;
+
+    const nextMessages = [...messages, { role: "user", content: trimmed }];
+    setMessages(nextMessages);
+    setInput("");
+    setIsSending(true);
+
+    try {
+      if (chatProvider === "ollama") {
+        await streamFromOllama(nextMessages);
+        return;
+      }
+
+      if (!hfApiKey) {
+        throw new Error("Missing API key");
+      }
+
+      const payload = {
+        inputs: buildPrompt(nextMessages),
+        parameters: {
+          max_new_tokens: 120,
+          temperature: 0.7,
+          top_p: 0.9
+        }
+      };
+
+      const response = await fetch(`https://api-inference.huggingface.co/models/${hfModel}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${hfApiKey}`
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        throw new Error("Request failed");
+      }
+
+      const data = await response.json();
+      const text =
+        Array.isArray(data) && data[0]?.generated_text
+          ? data[0].generated_text.split("Assistant:").pop().trim()
+          : "Sorry, I couldn't generate a response.";
+
+      streamAssistantMessage(text || "Sorry, I couldn't generate a response.");
+    } catch (err) {
+      if (chatProvider === "ollama") {
+        upsertAssistantMessage(
+          err instanceof Error && err.message
+            ? err.message
+            : "Local chatbot not reachable. Ensure Ollama is running and CORS is enabled."
+        );
+      } else {
+        upsertAssistantMessage(
+          err instanceof Error && err.message
+            ? err.message
+            : "Chatbot setup pending. Add your Hugging Face API key to VITE_HF_API_KEY."
+        );
+      }
+    } finally {
+      setIsSending(false);
+    }
+  };
 
   return (
     <div className={styles.wrapper}>
@@ -151,6 +374,54 @@ function Landing() {
           <div className={styles.pulse}></div>
         </div>
       </section>
+
+      {/* Chatbot Floating Widget */}
+      <div className={styles.chatbotWidget}>
+        <button
+          className={styles.chatbotFab}
+          onClick={() => setIsChatOpen((open) => !open)}
+          aria-label="Open chatbot"
+        >
+          🤖
+        </button>
+
+        {isChatOpen && (
+          <div className={styles.chatbotPopup}>
+            <div className={styles.chatbotHeader}>
+              <div>
+                <h2>Live Help</h2>
+                <p>Local model via Ollama</p>
+              </div>
+              <span className={styles.chatbotBadge}>Beta</span>
+            </div>
+
+            <div className={styles.chatbotBody} ref={listRef}>
+              {messages.map((msg, idx) => (
+                <div
+                  key={idx}
+                  className={
+                    msg.role === "user" ? styles.chatbotMessageUser : styles.chatbotMessageBot
+                  }
+                >
+                  {msg.content}
+                </div>
+              ))}
+            </div>
+
+            <form className={styles.chatbotForm} onSubmit={sendMessage}>
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Ask about features, pricing, onboarding..."
+              />
+              <button type="submit" disabled={isSending || isStreaming}>
+                {isSending ? "Sending..." : "Send"}
+              </button>
+            </form>
+          </div>
+        )}
+      </div>
 
       {/* Testimonials Section */}
       <section className={styles.testimonials}>

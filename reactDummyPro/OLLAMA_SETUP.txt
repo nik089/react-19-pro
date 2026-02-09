@@ -1,0 +1,37 @@
+Ollama Setup (Windows)
+
+1) Install Ollama
+   - Download: https://ollama.com/download
+   - Install and open the app
+
+2) Start Ollama server (if not running)
+   - Open PowerShell and run:
+     ollama serve
+
+3) Download a model (required)
+   - Recommended:
+     ollama pull llama3.1:8b
+
+4) Verify model installed
+   - Run:
+     ollama list
+
+5) Warm up the model (first run)
+   - Run:
+     ollama run llama3.1:8b "hi"
+
+6) Allow browser access (CORS)
+   - Run PowerShell as Admin:
+     setx OLLAMA_ORIGINS "*"
+   - Then quit and restart Ollama
+
+7) Start the React app (Vite dev server)
+   - From project root:
+     npm run dev
+
+Troubleshooting
+- If you see: "Local chatbot not reachable"
+  - Make sure Ollama is running
+  - Make sure model exists (ollama list)
+  - Restart Vite dev server
+  - Check this URL in browser: http://localhost:11434/api/tags
