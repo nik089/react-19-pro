@@ -1,7 +1,7 @@
 .sidebar {
-    width: 200px;
-    background: #1e293b;
-    color: white;
-    padding: 20px;
-    min-height: calc(100vh - 120px);
+  width: 220px;
+  background: #1e293b;
+  color: white;
+  padding: 20px;
+  flex-shrink: 0;
 }

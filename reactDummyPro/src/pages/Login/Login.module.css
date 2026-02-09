@@ -1,0 +1,129 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #f8f9fa;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+}
+
+.loginContainer {
+  flex: 1;
+  display: flex;
+}
+
+/* LEFT SIDE */
+.leftSide {
+  flex: 1;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  position: relative;
+  overflow: hidden;
+  color: white;
+}
+
+.circle1, .circle2, .circle3 {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  animation: float 8s ease-in-out infinite;
+}
+
+.circle1 { width: 300px; height: 300px; top: -50px; left: -50px; }
+.circle2 { width: 200px; height: 200px; bottom: -30px; right: -30px; }
+.circle3 { width: 150px; height: 150px; top: 50%; right: 10%; }
+
+@keyframes float { 50% { transform: translateY(-30px); } }
+
+.illustrationContent h1 { font-size: 48px; margin-bottom: 20px; }
+
+.features { margin-top: 40px; display: flex; flex-direction: column; gap: 20px; }
+
+.feature { display: flex; align-items: center; gap: 12px; font-size: 16px; }
+
+.checkIcon {
+  font-size: 20px;
+  color: white;
+  background: rgba(255,255,255,0.2);
+  padding: 6px;
+  border-radius: 50%;
+}
+
+/* RIGHT SIDE */
+.rightSide {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  overflow-y: auto;
+}
+
+.loginBox {
+  width: 100%;
+  max-width: 450px;
+  padding: 50px 40px;
+  background: white;
+  border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+}
+
+.loginForm { display: flex; flex-direction: column; gap: 24px; }
+
+.inputWrapper { position: relative; }
+
+.inputWrapper input {
+  width: 100%;
+  padding: 14px 16px 14px 50px;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: #667eea;
+}
+
+.togglePassword {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.loginButton {
+  padding: 16px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border-radius: 12px;
+  border: none;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@media (max-width: 968px) {
+  .loginContainer { flex-direction: column; }
+  .leftSide { min-height: 260px; text-align: center; }
+}

@@ -1,13 +1,20 @@
 .layout {
-    display: flex;
-    flex-direction: column;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
+/* Middle area grows */
 .body {
-    display: flex;
+  flex: 1;
+  display: flex;
+  min-height: 0; /* important */
 }
 
+/* Main content scrolls */
 .main {
-    flex: 1;
-    padding: 20px;
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  background: #f8fafc;
 }
