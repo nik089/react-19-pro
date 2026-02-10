@@ -1,8 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import toast from "react-hot-toast";
 import Header from "../../components/layout/Header";
 import styles from "../Login/Login.module.css";
 import { FaEnvelope, FaLock, FaEye, FaEyeSlash, FaCheckCircle } from "react-icons/fa";
+import usersSeed from "../../data/users.json";
 
 function Login() {
   const navigate = useNavigate();
@@ -10,21 +12,71 @@ function Login() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState({});
+
+  const getUsers = () => {
+    const stored = localStorage.getItem("users");
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) return parsed;
+      } catch {
+        // ignore parse errors
+      }
+    }
+    localStorage.setItem("users", JSON.stringify(usersSeed));
+    return usersSeed;
+  };
+
+  const validate = () => {
+    const nextErrors = {};
+    const emailTrimmed = email.trim();
+
+    if (!emailTrimmed) {
+      nextErrors.email = "Email is required.";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailTrimmed)) {
+      nextErrors.email = "Enter a valid email address.";
+    }
+
+    if (!password) {
+      nextErrors.password = "Password is required.";
+    } else if (password.length < 6) {
+      nextErrors.password = "Password must be at least 6 characters.";
+    }
+
+    return nextErrors;
+  };
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if (!email || !password) return;
+    const nextErrors = validate();
+    setErrors(nextErrors);
+    if (Object.keys(nextErrors).length > 0) return;
     setIsLoading(true);
     setTimeout(() => {
+      const users = getUsers();
+      const match = users.find(
+        (user) => user.email?.toLowerCase() === email.trim().toLowerCase()
+          && user.password === password
+      );
+
+      if (!match) {
+        setIsLoading(false);
+        toast.error("Email or password does not match.");
+        return;
+      }
+
       localStorage.setItem("isAuth", "true");
-      navigate("/dashboard");
-    }, 1500);
+      window.dispatchEvent(new Event("auth-change"));
+      toast.success("Login successful.");
+      setTimeout(() => navigate("/dashboard"), 600);
+    }, 900);
 
   };
 
   return (
     <div className={styles.page}>
-      <Header showLogin={false} />
+      <Header showLogin={false} hideProfile={true} />
 
       <main className={styles.main}>
         <div className={styles.loginContainer}>
@@ -70,9 +122,12 @@ function Login() {
                       placeholder="you@example.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
+                      aria-invalid={Boolean(errors.email)}
+                      className={errors.email ? styles.inputError : undefined}
                       required
                     />
                   </div>
+                  {errors.email && <p className={styles.errorText}>{errors.email}</p>}
                 </div>
 
                 <div className={styles.inputGroup}>
@@ -84,6 +139,8 @@ function Login() {
                       placeholder="Enter your password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
+                      aria-invalid={Boolean(errors.password)}
+                      className={errors.password ? styles.inputError : undefined}
                       required
                     />
                     <button
@@ -94,10 +151,18 @@ function Login() {
                       {showPassword ? <FaEyeSlash /> : <FaEye />}
                     </button>
                   </div>
+                  {errors.password && <p className={styles.errorText}>{errors.password}</p>}
                 </div>
 
                 <button type="submit" className={styles.loginButton} disabled={isLoading}>
-                  {isLoading ? <span className={styles.spinner}></span> : "Sign In"}
+                  {isLoading ? (
+                    <span className={styles.buttonLoader}>
+                      <span className={styles.spinner}></span>
+                      Signing in...
+                    </span>
+                  ) : (
+                    "Sign In"
+                  )}
                 </button>
               </form>
 

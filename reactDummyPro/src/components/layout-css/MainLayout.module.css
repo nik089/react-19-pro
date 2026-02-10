@@ -1,5 +1,5 @@
 .layout {
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   background: transparent;
@@ -10,6 +10,8 @@
   display: flex;
   gap: 18px;
   padding: 18px 22px 22px;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .main {
@@ -20,6 +22,7 @@
   box-shadow: var(--shadow-sm);
   border: 1px solid var(--border);
   overflow-y: auto;
+  min-height: 0;
 }
 
 @media (max-width: 900px) {
