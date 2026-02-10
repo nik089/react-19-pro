@@ -137,6 +137,46 @@ td {
     font-weight: bold;
 }
 
+.loadingState {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    background: rgba(59, 130, 246, 0.12);
+    color: #1d4ed8;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+.loadingSpinner {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 3px solid rgba(59, 130, 246, 0.25);
+    border-top-color: #2563eb;
+    animation: spin 0.8s linear infinite;
+}
+
+.errorState {
+    margin-bottom: 16px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    background: rgba(239, 68, 68, 0.12);
+    color: #b91c1c;
+    font-weight: 600;
+}
+
+.emptyState {
+    text-align: center;
+    padding: 16px;
+    color: #64748b;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
 @media (max-width: 900px) {
     .cards {
         grid-template-columns: repeat(2, 1fr);
