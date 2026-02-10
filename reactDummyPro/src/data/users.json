@@ -3,6 +3,8 @@
     "id": 1,
     "name": "Demo Admin",
     "email": "admin@umpro.com",
+    "mobile": "9999999999",
+    "role": "Admin",
     "password": "Admin@123"
   }
 ]
