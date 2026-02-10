@@ -7,6 +7,7 @@ import AddUser from "./pages/User-Management/Add-User/addUser";
 import Roles from "./pages/User-Management/Roles/Role";
 import Settings from "./pages/Settings/Setting";
 import Login from "./pages/Login/Login";
+import Signup from "./pages/Signup/Signup";
 import Landing from "./pages/Landing/Landing";
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
 
         <Route element={<MainLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />

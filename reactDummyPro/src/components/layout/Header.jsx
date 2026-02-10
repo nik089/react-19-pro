@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import styles from "../layout-css/Header.module.css";
 
-function Header() {
+function Header({ showLogin = true, forceProfile = false }) {
   const navigate = useNavigate();
   const [isAuth, setIsAuth] = useState(false);
   const [open, setOpen] = useState(false);
@@ -28,10 +28,10 @@ function Header() {
 
   return (
     <header className={styles.header}>
-      <h2>React Admin</h2>
+      <h2>User Management</h2>
 
-      {!isAuth ? (
-        <button onClick={() => navigate("/login")}>Login</button>
+      {!isAuth && !forceProfile ? (
+        showLogin ? <button onClick={() => navigate("/login")}>Login</button> : null
       ) : (
         <div className={styles.profileWrapper} ref={dropdownRef}>
           <div

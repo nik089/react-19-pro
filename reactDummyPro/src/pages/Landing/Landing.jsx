@@ -1,10 +1,12 @@
 import Header from "../../components/layout/Header";
 import styles from "./Landing.module.css";
 import { useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Landing() {
+  const navigate = useNavigate();
   const [messages, setMessages] = useState([
-    { role: "assistant", content: "Hi! Ask me anything about this platform." }
+    { role: "assistant", content: "Hi! Ask me anything about user management." }
   ]);
   const [input, setInput] = useState("");
   const [isSending, setIsSending] = useState(false);
@@ -14,35 +16,85 @@ function Landing() {
 
   const features = [
     {
-      icon: "👥",
-      title: "User Management",
-      description: "Efficiently manage and organize all your users in one centralized dashboard"
+      icon: "\u{1F465}",
+      title: "Unified User Directory",
+      description: "Create, import, and organize users across teams with a single source of truth."
     },
     {
-      icon: "🔒",
-      title: "Secure Access",
-      description: "Enterprise-grade security with role-based access control and encryption"
+      icon: "\u{1F512}",
+      title: "Role-Based Access",
+      description: "Define roles, permissions, and approvals so the right people see the right data."
     },
     {
-      icon: "📊",
-      title: "Analytics Dashboard",
-      description: "Get real-time insights with powerful analytics and reporting tools"
+      icon: "\u{1F4CA}",
+      title: "Smart Insights",
+      description: "Track growth, activity, and onboarding progress with real-time analytics."
     },
     {
-      icon: "⚡",
-      title: "Lightning Fast",
-      description: "Optimized performance ensures smooth experience even with large datasets"
+      icon: "\u26A1",
+      title: "Automated Workflows",
+      description: "Trigger onboarding, offboarding, and compliance checks automatically."
     },
     {
-      icon: "🔄",
-      title: "Real-time Sync",
-      description: "Automatic synchronization keeps your data up-to-date across all devices"
+      icon: "\u{1F504}",
+      title: "Real-Time Sync",
+      description: "Instant updates across devices, apps, and integrations."
     },
     {
-      icon: "🎨",
-      title: "Custom Branding",
-      description: "Personalize the platform with your brand colors and logo"
+      icon: "\u{1F3A8}",
+      title: "Brand Ready",
+      description: "Customize domains, colors, and messaging to match your company."
     }
+  ];
+
+  const steps = [
+    {
+      title: "Import & Verify Users",
+      description: "Upload CSV or connect SSO. We validate and remove duplicates automatically."
+    },
+    {
+      title: "Assign Roles & Policies",
+      description: "Apply permission sets, approval rules, and security baselines in minutes."
+    },
+    {
+      title: "Invite & Go Live",
+      description: "Send branded invites and track onboarding completion in real time."
+    }
+  ];
+
+  const logos = ["Cortex", "Nimbus", "Pulse", "Atlas", "BrightOps", "Nova"];
+
+  const activity = [
+    {
+      name: "Anita Patel",
+      action: "invited to Marketing",
+      time: "2 min ago",
+      tag: "Pending"
+    },
+    {
+      name: "Diego Alvarez",
+      action: "promoted to Admin",
+      time: "14 min ago",
+      tag: "Approved"
+    },
+    {
+      name: "Marina Chen",
+      action: "completed onboarding",
+      time: "35 min ago",
+      tag: "Complete"
+    },
+    {
+      name: "Samuel Okoro",
+      action: "requested access",
+      time: "1 hr ago",
+      tag: "Review"
+    }
+  ];
+
+  const quickStats = [
+    { label: "New invites", value: "128", trend: "+12%" },
+    { label: "Active today", value: "1,482", trend: "+8%" },
+    { label: "Roles audited", value: "64", trend: "+4%" }
   ];
 
   const testimonials = [
@@ -50,21 +102,21 @@ function Landing() {
       name: "Sarah Johnson",
       role: "Product Manager",
       company: "TechCorp",
-      image: "👩‍💼",
+      image: "\u{1F469}\u200D\u{1F4BC}",
       text: "This system has transformed how we manage our team. The interface is intuitive and powerful!"
     },
     {
       name: "Michael Chen",
       role: "IT Director",
       company: "InnovateLabs",
-      image: "👨‍💻",
+      image: "\u{1F468}\u200D\u{1F4BB}",
       text: "Best user management solution we've used. The security features are top-notch."
     },
     {
       name: "Emily Rodriguez",
       role: "HR Manager",
       company: "GlobalTech",
-      image: "👩‍🎓",
+      image: "\u{1F469}\u200D\u{1F393}",
       text: "Managing hundreds of users is now effortless. Highly recommend this platform!"
     }
   ];
@@ -292,39 +344,86 @@ function Landing() {
 
   return (
     <div className={styles.wrapper}>
-      <Header showLogin={true} />
+      <Header showLogin={false} />
 
       {/* Hero Section */}
       <section className={styles.hero}>
         <div className={styles.heroContent}>
-          <div className={styles.badge}>🚀 New Features Available</div>
+          <div className={styles.badge}>Launch your user management hub</div>
           <h1 className={styles.heroTitle}>
-            Manage Your Team with
-            <span className={styles.gradient}> Confidence</span>
+            Build a
+            <span className={styles.gradient}> Trusted</span> User Management
+            Platform
           </h1>
           <p className={styles.heroSubtitle}>
-            The most powerful and intuitive user management system built for modern teams.
-            Streamline operations, enhance security, and boost productivity.
+            Centralize every account, permission, and audit trail in one beautiful workspace.
+            Faster onboarding, stronger security, and happier teams.
           </p>
           <div className={styles.heroCta}>
-            <button className={styles.primaryBtn}>Get Started Free</button>
-            <button className={styles.secondaryBtn}>Watch Demo</button>
+            <button className={styles.primaryBtn} onClick={() => navigate("/login")}>
+              Start Managing Users
+            </button>
+            <button className={styles.secondaryBtn}>See Live Demo</button>
           </div>
           <div className={styles.heroImage}>
-            <div className={styles.dashboardMock}>
-              <div className={styles.mockHeader}></div>
-              <div className={styles.mockContent}>
-                <div className={styles.mockSidebar}></div>
-                <div className={styles.mockMain}>
-                  <div className={styles.mockCard}></div>
-                  <div className={styles.mockCard}></div>
-                  <div className={styles.mockCard}></div>
+            <div className={styles.bannerShell}>
+              <div className={styles.bannerTrack}>
+                <div className={styles.bannerCard}>
+                  <div className={styles.bannerHeader}>
+                    <span className={styles.bannerChip}>Access Control</span>
+                    <span className={styles.bannerTag}>Auto-approved</span>
+                  </div>
+                  <h3>Role-based policies that stay compliant</h3>
+                  <p>Grant access by team, location, and contract status in one click.</p>
+                  <div className={styles.bannerFooter}>
+                    <span>Permissions applied</span>
+                    <span className={styles.bannerStat}>98%</span>
+                  </div>
+                </div>
+
+                <div className={styles.bannerCard}>
+                  <div className={styles.bannerHeader}>
+                    <span className={styles.bannerChip}>Onboarding</span>
+                    <span className={styles.bannerTag}>Live</span>
+                  </div>
+                  <h3>New hires productive in 24 hours</h3>
+                  <p>Send branded invites, assign apps, and track completion instantly.</p>
+                  <div className={styles.bannerFooter}>
+                    <span>Tasks completed</span>
+                    <span className={styles.bannerStat}>1,248</span>
+                  </div>
+                </div>
+
+                <div className={styles.bannerCard}>
+                  <div className={styles.bannerHeader}>
+                    <span className={styles.bannerChip}>Security Insights</span>
+                    <span className={styles.bannerTag}>Updated</span>
+                  </div>
+                  <h3>Risk alerts delivered before incidents</h3>
+                  <p>Automated checks surface dormant accounts and overdue reviews.</p>
+                  <div className={styles.bannerFooter}>
+                    <span>Issues resolved</span>
+                    <span className={styles.bannerStat}>76</span>
+                  </div>
+                </div>
+
+                <div className={styles.bannerCard}>
+                  <div className={styles.bannerHeader}>
+                    <span className={styles.bannerChip}>Directory Sync</span>
+                    <span className={styles.bannerTag}>Synced</span>
+                  </div>
+                  <h3>Always current across every app</h3>
+                  <p>Keep HRIS, SSO, and apps aligned with real-time user updates.</p>
+                  <div className={styles.bannerFooter}>
+                    <span>Sync accuracy</span>
+                    <span className={styles.bannerStat}>99.9%</span>
+                  </div>
                 </div>
               </div>
             </div>
-            <div className={styles.floatingElement1}>✨</div>
-            <div className={styles.floatingElement2}>🎯</div>
-            <div className={styles.floatingElement3}>💡</div>
+            <div className={styles.floatingElement1}>{"\u2728"}</div>
+            <div className={styles.floatingElement2}>{"\u{1F3AF}"}</div>
+            <div className={styles.floatingElement3}>{"\u{1F4A1}"}</div>
           </div>
         </div>
         <div className={styles.wave}>
@@ -344,12 +443,24 @@ function Landing() {
         ))}
       </section>
 
+      {/* Trusted By */}
+      <section className={styles.trusted}>
+        <div className={styles.container}>
+          <p className={styles.trustedLabel}>Trusted by fast-growing teams</p>
+          <div className={styles.trustedGrid}>
+            {logos.map((logo) => (
+              <div key={logo} className={styles.trustedLogo}>{logo}</div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Features Section */}
       <section className={styles.features}>
         <div className={styles.container}>
           <div className={styles.sectionHeader}>
-            <h2>Powerful Features for Modern Teams</h2>
-            <p>Everything you need to manage users efficiently and securely</p>
+            <h2>Everything You Need to Run User Management</h2>
+            <p>Secure, compliant, and effortless - built for growing teams.</p>
           </div>
           <div className={styles.featureGrid}>
             {features.map((feature, index) => (
@@ -363,12 +474,83 @@ function Landing() {
         </div>
       </section>
 
+      {/* Setup Steps */}
+      <section className={styles.steps}>
+        <div className={styles.container}>
+          <div className={styles.sectionHeader}>
+            <h2>Launch in Three Simple Steps</h2>
+            <p>Import, secure, and invite - your team is live in hours, not weeks.</p>
+          </div>
+          <div className={styles.stepsGrid}>
+            {steps.map((step, index) => (
+              <div key={index} className={styles.stepCard}>
+                <div className={styles.stepBadge}>{String(index + 1).padStart(2, "0")}</div>
+                <h3>{step.title}</h3>
+                <p>{step.description}</p>
+                <div className={styles.stepChecks}>
+                  <span className={styles.stepCheckIcon} aria-hidden="true">
+                    {"\u2713"}
+                  </span>
+                  Ready in minutes
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Activity Section */}
+      <section className={styles.activity}>
+        <div className={styles.container}>
+          <div className={styles.sectionHeader}>
+            <h2>See What Your Team Is Doing</h2>
+            <p>Live activity feed and growth signals in one glance.</p>
+          </div>
+          <div className={styles.activityGrid}>
+            <div className={styles.activityCard}>
+              <div className={styles.activityHeader}>
+                <h3>Today's Activity</h3>
+                <span className={styles.activityPulse}></span>
+              </div>
+              <div className={styles.activityList}>
+                {activity.map((item) => (
+                  <div key={item.name} className={styles.activityItem}>
+                    <div>
+                      <p className={styles.activityName}>{item.name}</p>
+                      <p className={styles.activityMeta}>{item.action}</p>
+                    </div>
+                    <div className={styles.activityRight}>
+                      <span className={styles.activityTag}>{item.tag}</span>
+                      <span className={styles.activityTime}>{item.time}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className={styles.activityHighlights}>
+              {quickStats.map((stat) => (
+                <div key={stat.label} className={styles.highlightCard}>
+                  <p className={styles.highlightLabel}>{stat.label}</p>
+                  <div className={styles.highlightValue}>{stat.value}</div>
+                  <span className={styles.highlightTrend}>{stat.trend} this week</span>
+                </div>
+              ))}
+              <div className={styles.highlightCardAccent}>
+                <p className={styles.highlightLabel}>Next audit</p>
+                <div className={styles.highlightValue}>3 days</div>
+                <span className={styles.highlightTrend}>Stay compliant</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Banner */}
       <section className={styles.ctaBanner}>
         <div className={styles.ctaContent}>
-          <h2>Ready to Transform Your Workflow?</h2>
-          <p>Join thousands of teams already using our platform</p>
-          <button className={styles.ctaButton}>Start Your Free Trial</button>
+          <h2>Ready to Run User Management the Right Way?</h2>
+          <p>Start today with secure onboarding, clean access, and instant visibility.</p>
+          <button className={styles.ctaButton}>Create Your Workspace</button>
         </div>
         <div className={styles.ctaAnimation}>
           <div className={styles.pulse}></div>
@@ -382,7 +564,7 @@ function Landing() {
           onClick={() => setIsChatOpen((open) => !open)}
           aria-label="Open chatbot"
         >
-          🤖
+          {"\u{1F916}"}
         </button>
 
         {isChatOpen && (
@@ -453,12 +635,23 @@ function Landing() {
         <div className={styles.footerContent}>
           <div className={styles.footerSection}>
             <h3>User Management System</h3>
-            <p>The modern way to manage your team with confidence and security.</p>
+            <p>One workspace for access, onboarding, approvals, and user insights.</p>
             <div className={styles.socialLinks}>
-              <a href="#" className={styles.socialIcon}>📘</a>
-              <a href="#" className={styles.socialIcon}>🐦</a>
-              <a href="#" className={styles.socialIcon}>💼</a>
-              <a href="#" className={styles.socialIcon}>📷</a>
+              <a href="#" className={styles.socialIcon} aria-label="Facebook">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M15.12 8.53h2.22V5.28h-2.22c-2.7 0-4.45 1.68-4.45 4.32v2H8.5v3.06h2.17v6.06h3.12v-6.06h2.38l.35-3.06h-2.73v-1.8c0-.83.45-1.27 1.33-1.27Z" />
+                </svg>
+              </a>
+              <a href="#" className={styles.socialIcon} aria-label="Twitter">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M19.45 7.28c.01.16.01.33.01.49 0 4.97-3.79 10.7-10.7 10.7-2.12 0-4.1-.62-5.77-1.7.3.03.6.05.91.05 1.76 0 3.39-.6 4.68-1.62-1.65-.03-3.04-1.12-3.52-2.6.23.04.46.07.71.07.34 0 .68-.05.99-.13-1.72-.35-3.02-1.87-3.02-3.7v-.05c.5.28 1.09.46 1.7.48-1.01-.67-1.67-1.82-1.67-3.12 0-.7.18-1.34.5-1.9 1.84 2.26 4.6 3.74 7.71 3.9-.06-.27-.09-.53-.09-.82 0-2.01 1.63-3.64 3.64-3.64 1.05 0 2 .44 2.67 1.15.83-.16 1.61-.47 2.31-.88-.27.85-.85 1.56-1.6 2.02.74-.08 1.45-.29 2.1-.58-.5.73-1.12 1.38-1.84 1.9Z" />
+                </svg>
+              </a>
+              <a href="#" className={styles.socialIcon} aria-label="LinkedIn">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M5.46 9.5h3.2v9.9h-3.2v-9.9Zm1.6-4.9a1.86 1.86 0 1 1 0 3.72 1.86 1.86 0 0 1 0-3.72ZM11.2 9.5h3.07v1.35h.05c.43-.81 1.5-1.66 3.09-1.66 3.3 0 3.9 2.17 3.9 4.99v5.22h-3.2v-4.63c0-1.1-.02-2.52-1.54-2.52-1.54 0-1.77 1.2-1.77 2.44v4.71h-3.2v-9.9Z" />
+                </svg>
+              </a>
             </div>
           </div>
           <div className={styles.footerSection}>

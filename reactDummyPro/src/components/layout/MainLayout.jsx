@@ -6,7 +6,7 @@ import styles from "../layout-css/MainLayout.module.css";
 function MainLayout() {
   return (
     <div className={styles.layout}>
-      <Header showLogin={false} />
+      <Header showLogin={false} forceProfile={true} />
       <div className={styles.body}>
         <Sidebar />
         <main className={styles.main}>

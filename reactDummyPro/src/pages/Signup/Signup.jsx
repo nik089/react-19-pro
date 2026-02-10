@@ -1,25 +1,31 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Header from "../../components/layout/Header";
-import styles from "../Login/Login.module.css";
-import { FaEnvelope, FaLock, FaEye, FaEyeSlash, FaCheckCircle } from "react-icons/fa";
+import styles from "./Signup.module.css";
+import {
+  FaEnvelope,
+  FaLock,
+  FaEye,
+  FaEyeSlash,
+  FaCheckCircle,
+  FaUser
+} from "react-icons/fa";
 
-function Login() {
+function Signup() {
   const navigate = useNavigate();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = (e) => {
+  const handleSignup = (e) => {
     e.preventDefault();
-    if (!email || !password) return;
+    if (!name || !email || !password) return;
     setIsLoading(true);
     setTimeout(() => {
-      localStorage.setItem("isAuth", "true");
-      navigate("/dashboard");
-    }, 1500);
-
+      navigate("/login");
+    }, 1200);
   };
 
   return (
@@ -34,21 +40,21 @@ function Login() {
             <div className={styles.circle3}></div>
 
             <div className={styles.illustrationContent}>
-              <h1>Welcome Back!</h1>
-              <p>Sign in to continue managing your team efficiently and securely.</p>
+              <h1>Create Your Workspace</h1>
+              <p>Get started with smarter user management in just a few steps.</p>
 
               <div className={styles.features}>
                 <div className={styles.feature}>
                   <FaCheckCircle className={styles.checkIcon} />
-                  Secure Authentication
+                  Guided onboarding
                 </div>
                 <div className={styles.feature}>
                   <FaCheckCircle className={styles.checkIcon} />
-                  Real-time Updates
+                  Secure access controls
                 </div>
                 <div className={styles.feature}>
                   <FaCheckCircle className={styles.checkIcon} />
-                  24/7 Support
+                  Fast team setup
                 </div>
               </div>
             </div>
@@ -56,11 +62,25 @@ function Login() {
           <div className={styles.rightSide}>
             <div className={styles.loginBox}>
               <div className={styles.loginHeader}>
-                <h2>Sign In</h2>
-                <p>Enter your credentials to access your account</p>
+                <h2>Sign Up</h2>
+                <p>Create your account to start managing users</p>
               </div>
 
-              <form onSubmit={handleLogin} className={styles.loginForm}>
+              <form onSubmit={handleSignup} className={styles.loginForm}>
+                <div className={styles.inputGroup}>
+                  <label>Full Name</label>
+                  <div className={styles.inputWrapper}>
+                    <FaUser className={styles.inputIcon} />
+                    <input
+                      type="text"
+                      placeholder="Your name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      required
+                    />
+                  </div>
+                </div>
+
                 <div className={styles.inputGroup}>
                   <label>Email Address</label>
                   <div className={styles.inputWrapper}>
@@ -81,7 +101,7 @@ function Login() {
                     <FaLock className={styles.inputIcon} />
                     <input
                       type={showPassword ? "text" : "password"}
-                      placeholder="Enter your password"
+                      placeholder="Create a strong password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
@@ -97,27 +117,26 @@ function Login() {
                 </div>
 
                 <button type="submit" className={styles.loginButton} disabled={isLoading}>
-                  {isLoading ? <span className={styles.spinner}></span> : "Sign In"}
+                  {isLoading ? <span className={styles.spinner}></span> : "Create Account"}
                 </button>
               </form>
 
               <div className={styles.signupRow}>
-                <span>New here?</span>
+                <span>Already have an account?</span>
                 <button
                   type="button"
                   className={styles.signupLink}
-                  onClick={() => navigate("/signup")}
+                  onClick={() => navigate("/login")}
                 >
-                  Create an account
+                  Sign in
                 </button>
               </div>
             </div>
           </div>
-
         </div>
       </main>
     </div>
   );
 }
 
-export default Login;
+export default Signup;
