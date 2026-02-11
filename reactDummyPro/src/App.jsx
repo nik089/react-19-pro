@@ -1,6 +1,7 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
+import { useAuth } from "./services/AuthContext";
 import MainLayout from "./components/layout/MainLayout";
 
 import Dashboard from "./pages/Dashboard/Dashboard";
@@ -13,7 +14,7 @@ import Signup from "./pages/Signup/Signup";
 import Landing from "./pages/Landing/Landing";
 
 function App() {
-  const [isAuth, setIsAuth] = useState(() => localStorage.getItem("isAuth") === "true");
+  const { currentUser } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -36,18 +37,6 @@ function App() {
     };
   }, []);
 
-  useEffect(() => {
-    const syncAuth = () => {
-      setIsAuth(localStorage.getItem("isAuth") === "true");
-    };
-    window.addEventListener("storage", syncAuth);
-    window.addEventListener("auth-change", syncAuth);
-    return () => {
-      window.removeEventListener("storage", syncAuth);
-      window.removeEventListener("auth-change", syncAuth);
-    };
-  }, []);
-
   if (isLoading) {
     return (
       <div className="global-loader">
@@ -61,7 +50,7 @@ function App() {
   }
 
   return (
-    <BrowserRouter>
+    <>
       <Toaster
         position="top-right"
         toastOptions={{
@@ -82,10 +71,10 @@ function App() {
       />
       <Routes>
         <Route path="/" element={<Landing />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={!currentUser ? <Login /> : <Navigate to="/dashboard" replace />} />
+        <Route path="/signup" element={!currentUser ? <Signup /> : <Navigate to="/dashboard" replace />} />
 
-        <Route element={isAuth ? <MainLayout /> : <Navigate to="/login" replace />}>
+        <Route element={currentUser ? <MainLayout /> : <Navigate to="/login" replace />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/users" element={<Users />} />
           <Route path="/add-user" element={<AddUser />} />
@@ -93,9 +82,9 @@ function App() {
           <Route path="/settings" element={<Settings />} />
         </Route>
 
-        <Route path="*" element={<Navigate to={isAuth ? "/dashboard" : "/login"} replace />} />
+        <Route path="*" element={<Navigate to={currentUser ? "/dashboard" : "/"} replace />} />
       </Routes>
-    </BrowserRouter>
+    </>
   );
 }
 

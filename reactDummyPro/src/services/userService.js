@@ -1,4 +1,16 @@
+import users from '../data/users.json';
 import axios from "axios";
+
+export const login = async (email, password) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const user = users.find(
+        (u) => u.email.toLowerCase() === email.toLowerCase() && u.password === password
+      );
+      resolve(user || null);
+    }, 500); // Simulate network delay
+  });
+};
 
 const api = axios.create({
   baseURL: "https://jsonplaceholder.typicode.com",

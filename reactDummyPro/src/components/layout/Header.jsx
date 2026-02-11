@@ -1,17 +1,23 @@
-import { useNavigate } from "react-router-dom";
-import { useEffect, useState, useRef } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useState, useRef, useEffect } from "react";
 import toast from "react-hot-toast";
 import styles from "../layout-css/Header.module.css";
+import { useAuth } from "../../services/AuthContext";
 
-function Header({ showLogin = true, forceProfile = false, hideProfile = false }) {
+function Header({ showLogin = true }) {
   const navigate = useNavigate();
-  const [isAuth, setIsAuth] = useState(false);
+  const { currentUser, logout } = useAuth();
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef();
 
-  useEffect(() => {
-    setIsAuth(localStorage.getItem("isAuth") === "true");
+  const handleLogout = () => {
+    logout();
+    toast.success("Logged out successfully.");
+    navigate("/");
+    setOpen(false);
+  };
 
+  useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setOpen(false);
@@ -21,36 +27,32 @@ function Header({ showLogin = true, forceProfile = false, hideProfile = false })
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem("isAuth");
-    window.dispatchEvent(new Event("auth-change"));
-    toast.success("Logged out successfully.");
-    navigate("/");
-  };
-
-  const showProfile = forceProfile || (isAuth && !hideProfile);
-
   return (
     <header className={styles.header}>
-      <h2>User Management</h2>
+      <h2><Link to="/" className={styles.logoLink}>User Management</Link></h2>
 
-      {!showProfile ? (
-        showLogin ? <button onClick={() => navigate("/login")}>Login</button> : null
-      ) : (
+      {currentUser ? (
         <div className={styles.profileWrapper} ref={dropdownRef}>
           <div
             className={styles.avatar}
             onClick={() => setOpen(!open)}
           >
-            N
+            {currentUser.name.charAt(0).toUpperCase()}
           </div>
 
           {open && (
             <div className={styles.dropdown}>
-              <button onClick={handleLogout}>Logout</button>
+              <div className={styles.dropdownHeader}>
+                <p className={styles.userName}>{currentUser.name}</p>
+                <p className={styles.userEmail}>{currentUser.email}</p>
+              </div>
+              <Link to="/dashboard" className={styles.dropdownItem} onClick={() => setOpen(false)}>Dashboard</Link>
+              <button onClick={handleLogout} className={styles.dropdownItem}>Logout</button>
             </div>
           )}
         </div>
+      ) : (
+        showLogin && <button onClick={() => navigate("/login")}>Login</button>
       )}
     </header>
   );

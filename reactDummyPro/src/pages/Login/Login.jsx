@@ -4,29 +4,16 @@ import toast from "react-hot-toast";
 import Header from "../../components/layout/Header";
 import styles from "../Login/Login.module.css";
 import { FaEnvelope, FaLock, FaEye, FaEyeSlash, FaCheckCircle } from "react-icons/fa";
-import usersSeed from "../../data/users.json";
+import { useAuth } from "../../services/AuthContext";
 
 function Login() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
-
-  const getUsers = () => {
-    const stored = localStorage.getItem("users");
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed)) return parsed;
-      } catch {
-        // ignore parse errors
-      }
-    }
-    localStorage.setItem("users", JSON.stringify(usersSeed));
-    return usersSeed;
-  };
 
   const validate = () => {
     const nextErrors = {};
@@ -47,31 +34,26 @@ function Login() {
     return nextErrors;
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     const nextErrors = validate();
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
     setIsLoading(true);
-    setTimeout(() => {
-      const users = getUsers();
-      const match = users.find(
-        (user) => user.email?.toLowerCase() === email.trim().toLowerCase()
-          && user.password === password
-      );
 
-      if (!match) {
-        setIsLoading(false);
+    try {
+      const user = await login(email.trim(), password);
+      if (user) {
+        toast.success("Login successful.");
+        setTimeout(() => navigate("/dashboard"), 600);
+      } else {
         toast.error("Email or password does not match.");
-        return;
       }
-
-      localStorage.setItem("isAuth", "true");
-      window.dispatchEvent(new Event("auth-change"));
-      toast.success("Login successful.");
-      setTimeout(() => navigate("/dashboard"), 600);
-    }, 900);
-
+    } catch (error) {
+      toast.error("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
