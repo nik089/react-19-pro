@@ -1,101 +1,22 @@
 [
-  {
-    "id": 1,
-    "name": "Nikhil Verma",
-    "email": "nikhil.verma@umpro.com",
-    "mobile": "9999999999",
-    "role": "Admin",
-    "password": "Admin@123",
-    "createdAt": "2024-01-15T10:30:00Z"
-  },
-  {
-    "id": 2,
-    "name": "Rajesh Kumar",
-    "email": "rajesh.kumar@umpro.com",
-    "mobile": "9876543210",
-    "role": "Developer",
-    "password": "TempPass@123",
-    "createdAt": "2024-02-10T14:20:00Z"
-  },
-  {
-    "id": 3,
-    "name": "Priya Singh",
-    "email": "priya.singh@umpro.com",
-    "mobile": "9876543211",
-    "role": "Manager",
-    "password": "TempPass@123",
-    "createdAt": "2024-02-11T09:15:00Z"
-  },
-  {
-    "id": 4,
-    "name": "Amit Patel",
-    "email": "amit.patel@umpro.com",
-    "mobile": "9876543212",
-    "role": "Developer",
-    "password": "TempPass@123",
-    "createdAt": "2024-02-12T11:45:00Z"
-  },
-  {
-    "id": 5,
-    "name": "Neha Sharma",
-    "email": "neha.sharma@umpro.com",
-    "mobile": "9876543213",
-    "role": "User",
-    "password": "TempPass@123",
-    "createdAt": "2024-02-13T16:30:00Z"
-  },
-  {
-    "id": 6,
-    "name": "Vikram Desai",
-    "email": "vikram.desai@umpro.com",
-    "mobile": "9876543214",
-    "role": "Developer",
-    "password": "TempPass@123",
-    "createdAt": "2024-02-14T13:20:00Z"
-  },
-  {
-    "id": 7,
-    "name": "Ananya Gupta",
-    "email": "ananya.gupta@umpro.com",
-    "mobile": "9876543215",
-    "role": "Viewer",
-    "password": "TempPass@123",
-    "createdAt": "2024-02-15T10:00:00Z"
-  },
-  {
-    "id": 8,
-    "name": "Sandeep Reddy",
-    "email": "sandeep.reddy@umpro.com",
-    "mobile": "9876543216",
-    "role": "Manager",
-    "password": "TempPass@123",
-    "createdAt": "2024-02-16T15:45:00Z"
-  },
-  {
-    "id": 9,
-    "name": "Zara Khan",
-    "email": "zara.khan@umpro.com",
-    "mobile": "9876543217",
-    "role": "Developer",
-    "password": "TempPass@123",
-    "createdAt": "2024-02-17T12:30:00Z"
-  },
-  {
-    "id": 10,
-    "name": "Rohan Singh",
-    "email": "rohan.singh@umpro.com",
-    "mobile": "9876543218",
-    "role": "User",
-    "password": "TempPass@123",
-    "createdAt": "2024-02-18T14:15:00Z"
-  },
-  {
-    "id": 11,
-    "name": "Kavya Iyer",
-    "email": "kavya.iyer@umpro.com",
-    "mobile": "9876543219",
-    "role": "Admin",
-    "password": "TempPass@123",
-    "createdAt": "2024-02-19T09:45:00Z"
-  }
+  { "id": 1, "name": "Aarav Sharma", "email": "aarav.sharma@example.com", "role": "Admin", "isActive": true },
+  { "id": 2, "name": "Diya Patel", "email": "diya.patel@example.com", "role": "Editor", "isActive": true },
+  { "id": 3, "name": "Kabir Singh", "email": "kabir.singh@example.com", "role": "Viewer", "isActive": false },
+  { "id": 4, "name": "Ishaan Mehta", "email": "ishaan.mehta@example.com", "role": "Editor", "isActive": true },
+  { "id": 5, "name": "Ananya Gupta", "email": "ananya.gupta@example.com", "role": "Viewer", "isActive": true },
+  { "id": 6, "name": "Rohan Joshi", "email": "rohan.joshi@example.com", "role": "Editor", "isActive": false },
+  { "id": 7, "name": "Priya Verma", "email": "priya.verma@example.com", "role": "Admin", "isActive": true },
+  { "id": 8, "name": "Arjun Reddy", "email": "arjun.reddy@example.com", "role": "Viewer", "isActive": true },
+  { "id": 9, "name": "Saanvi Desai", "email": "saanvi.desai@example.com", "role": "Editor", "isActive": false },
+  { "id": 10, "name": "Vivaan Iyer", "email": "vivaan.iyer@example.com", "role": "Viewer", "isActive": true },
+  { "id": 11, "name": "Myra Kumar", "email": "myra.kumar@example.com", "role": "Editor", "isActive": true },
+  { "id": 12, "name": "Advik Nair", "email": "advik.nair@example.com", "role": "Admin", "isActive": false },
+  { "id": 13, "name": "Kiara Malhotra", "email": "kiara.malhotra@example.com", "role": "Viewer", "isActive": true },
+  { "id": 14, "name": "Yash Kapoor", "email": "yash.kapoor@example.com", "role": "Editor", "isActive": true },
+  { "id": 15, "name": "Anika Reddy", "email": "anika.reddy@example.com", "role": "Viewer", "isActive": false },
+  { "id": 16, "name": "Reyansh Agarwal", "email": "reyansh.agarwal@example.com", "role": "Editor", "isActive": true },
+  { "id": 17, "name": "Aadhya Sharma", "email": "aadhya.sharma@example.com", "role": "Admin", "isActive": true },
+  { "id": 18, "name": "Vihaan Gupta", "email": "vihaan.gupta@example.com", "role": "Viewer", "isActive": false },
+  { "id": 19, "name": "Zara Khan", "email": "zara.khan@example.com", "role": "Editor", "isActive": true },
+  { "id": 20, "name": "Sai Joshi", "email": "sai.joshi@example.com", "role": "Viewer", "isActive": true }
 ]
